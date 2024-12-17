@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
 <head>
     <meta charset="UTF-8">
     <title>Event List</title>
@@ -32,7 +34,7 @@
 </header>
 <main>
     <h2 class="text-center">Choose an Event</h2>
-
+    <a href="/logout">Log out</a>
     <form th:method="post" th:action="@{/}" class="form-inline my-4">
         <div class="form-group mx-sm-3 mb-2">
             <label for="search-input" class="sr-only">Search for an event:</label>
@@ -57,11 +59,13 @@
                     <span th:text="${event.getName()} + ', Description: ' + ${event.getDescription()} + ', Rating: ' + ${event.getPopularityScore()} + ', Location: ' + ${event.getLocation().getName()}"></span>
                 </div>
                 <div>
-                    <div>
-                        <a th:href="@{'/events/edit/{id}' (id=${event.getId()})}" class="btn btn-primary btn-sm">Edit</a>
-                        <a th:href="@{'/events/delete/{id}' (id=${event.getId()})}"
-                           class="btn btn-danger btn-sm">Delete</a>
-                    </div>
+                   <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                       <div>
+                           <a th:href="@{'/events/edit/{id}' (id=${event.getId()})}" class="btn btn-primary btn-sm">Edit</a>
+                           <a th:href="@{'/events/delete/{id}' (id=${event.getId()})}"
+                              class="btn btn-danger btn-sm">Delete</a>
+                       </div>
+                   </th:block>
                 </div>
             </li>
         </ul>
